@@ -49,8 +49,8 @@ def print_report(monthIndex, yearIndex):
         print(f'{visits[key]}x\t${str(output_amount).replace("-", "")}\t{key}')
 
 
-for j in range(2019,2021):
-    for i in range(1, 12):
+for j in range(2019,2022):
+    for i in range(1, 13):
         print(f'Report for {i}/{j}:')
         print_report(i, j)
         print()
