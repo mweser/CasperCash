@@ -6,10 +6,8 @@ from CsvImport import CsvImport
 import_file = "Extracted_Chase_Activity_Stmt_20210601.csv"
 
 new_import = CsvImport.to_dict(import_file)
-visits = {}
-total_spends = {}
 
-def add_to_dict(name, value):
+def add_to_dict(name, value, visits, total_spends):
     if name in visits.keys():
         visits[name] += 1
     else:
@@ -19,27 +17,40 @@ def add_to_dict(name, value):
         total_spends[name] += round(float(value), 2)
     else:
         total_spends[name] = round(float(value), 2)
+    return visits, total_spends
 
-for item in new_import:
-    try:
-        float(item['Amount'].replace('--', '-'))
-    except ValueError:
-        # print(f"{item['Amount']} is not a number")
-        orig_amount = item['Amount']
-        orig_description = item['Description']
+def print_report(monthIndex):
+    visits = {}
+    total_spends = {}
 
-        item['Description'] = orig_amount
-        item['Amount'] = orig_description
+    for item in new_import:
+        if int(item["Trans Date"].split("/")[0]) == monthIndex:
+            # print(int(item["Trans Date"].split("/")[0]))
 
-    item['Amount'] = item['Amount'].replace('--', '-').replace('-', '')
-    item['Description'] = item['Description'].replace('-', '').split(' ')[0].split('*')[0].strip(' ')
-    add_to_dict(item['Description'], item['Amount'])
-    # if "DOORDASH" in item['Description']:
-    #     print(item)
+            try:
+                float(item['Amount'].replace('--', '-'))
+            except ValueError:
+                orig_amount = item['Amount']
+                orig_description = item['Description']
+
+                item['Description'] = orig_amount
+                item['Amount'] = orig_description
+
+            item['Amount'] = item['Amount'].replace('--', '-').replace('-', '')
+            item['Description'] = item['Description'].replace('-', '').split(' ')[0].split('*')[0].strip(' ')
+            visits, total_spends = add_to_dict(item['Description'], item['Amount'], visits, total_spends)
+
+    for key in sorted(total_spends.keys()):
+        output_amount = round(float(total_spends[key]), 2)
+        print(f'{visits[key]}x\t${str(output_amount).replace("-", "")}\t{key}')
+
+
+for i in range(1, 12):
+    print(f'Month report for {i}:')
+    print_report(i)
+    print()
 
 
 
-for key in sorted(total_spends.keys()):
-    output_amount = round(float(total_spends[key]), 2)
-    print(f'{visits[key]}x\t${str(output_amount).replace("-", "")}\t{key}')
+
 
