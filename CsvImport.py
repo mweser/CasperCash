@@ -13,9 +13,15 @@ class CsvImport:
         for i, line in enumerate(source_data):
             if i == 0:
                 headers = line.strip().replace("\"", "").split(",")
+            elif "Zelle" in line:
+                pass
+            elif "IMAD" in line:
+                pass
+            elif "OVERSEA CHINESE BANKING CORP" in line:
+                pass
             else:
                 dictionary = {}
-                for j, item in enumerate(line.strip().replace(",,", ",").replace("\"", "").split(",")):
+                for j, item in enumerate(line.strip().replace(", ", "").replace(",,", ",").replace("\"", "").split(",")):
                     if j < len(headers):
                         if "Zelle" in item:
                             dictionary[headers[j]] = "Zelle Quickpay"
