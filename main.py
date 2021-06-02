@@ -1,9 +1,14 @@
 import os
+from sys import argv
 
 from CsvImport import CsvImport
 
-# source_dir = "sampledata/"
 import_file = "Chase5722_Activity_20210602.CSV"
+
+if len(argv) > 1:
+    import_file = argv[1]
+else:
+    import_file = "Chase5722_Activity_20210602.CSV"
 
 new_import = CsvImport.to_dict(import_file)
 
@@ -47,6 +52,8 @@ def print_report(monthIndex, yearIndex):
     for key in sorted(total_spends.keys()):
         output_amount = round(float(total_spends[key]), 2)
         print(f'{visits[key]}x\t${str(output_amount).replace("-", "")}\t{key}')
+
+
 
 
 for j in range(2019,2022):
