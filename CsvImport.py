@@ -12,10 +12,11 @@ class CsvImport:
         new_list = []
         for i, line in enumerate(source_data):
             if i == 0:
-                headers = line.strip().split(",")
+                headers = line.strip().replace("\"", "").split(",")
             else:
                 dictionary = {}
-                for j, item in enumerate(line.strip().split(",")):
-                    dictionary[headers[j]] = item
+                for j, item in enumerate(line.strip().replace(",,", ",").replace("\"", "").split(",")):
+                    if j < len(headers):
+                        dictionary[headers[j]] = item
                 new_list.append(dictionary)
         return new_list
