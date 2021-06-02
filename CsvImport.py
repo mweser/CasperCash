@@ -17,6 +17,9 @@ class CsvImport:
                 dictionary = {}
                 for j, item in enumerate(line.strip().replace(",,", ",").replace("\"", "").split(",")):
                     if j < len(headers):
-                        dictionary[headers[j]] = item
+                        if "Zelle" in item:
+                            dictionary[headers[j]] = "Zelle Quickpay"
+                        else:
+                            dictionary[headers[j]] = item
                 new_list.append(dictionary)
         return new_list
